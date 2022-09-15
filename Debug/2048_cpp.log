@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\main.cpp(1,9): warning C4068: unknown pragma 'GCC'
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(48,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(48,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(107): warning C4172: returning address of local variable or temporary: randomTile
+  2048_cpp.vcxproj -> C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\Debug\2048_cpp.exe
