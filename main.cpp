@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(768, 768), "2048");
 	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(144);
 
 	while (window.isOpen()) {
 		window.clear(sf::Color(211, 193, 172, 255));

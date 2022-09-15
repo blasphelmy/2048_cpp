@@ -53,8 +53,15 @@ public:
 					sf::Color numberColor = getNumberColor(gameArray[row][col]);
 					tile.setFillColor(numberColor);
 					number.setCharacterSize(24);
-					number.setFillColor(sf::Color::Black);
-					number.setPosition(210 + row * 100, 210 + col * 100);
+					if (gameArray[row][col] <= 4) {
+						number.setFillColor(sf::Color::Black);
+					}
+					else {
+						number.setFillColor(sf::Color::White);
+					}
+					sf::Vector2f bounds = tile.getPosition();
+					sf::FloatRect innerBounds = number.getLocalBounds();
+					number.setPosition(bounds.x + ((90 - innerBounds.width) / 2), bounds.y + ((85 - innerBounds.height) / 2));
 					window->draw(tile);
 					window->draw(number);
 				}else{
