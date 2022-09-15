@@ -10,10 +10,39 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+sf::Vector2f round(const sf::Vector2f vector)
+{
+	return sf::Vector2f{ std::round(vector.x), std::round(vector.y) };
+}
+
 class gameBoard {
 private:
 	unsigned int gameArray[4][4];
+	std::map<unsigned int, sf::Color> colorMap;
+	void initializeColorMap() {
+		colorMap[2] =     sf::Color(238, 228, 218, 255);
+		colorMap[4] =     sf::Color(238, 225, 201, 255);
+		colorMap[8] =     sf::Color(243, 178, 122, 255);
+		colorMap[16] =    sf::Color(246, 150, 100, 255);
+		colorMap[32] =    sf::Color(51, 173, 86, 255);
+		colorMap[64] =    sf::Color(62, 193, 62, 255);
+		colorMap[128] =   sf::Color(50, 168, 164, 255);
+		colorMap[256] =   sf::Color(50, 146, 168, 255);
+		colorMap[512] =   sf::Color(186, 47, 47, 255);
+		colorMap[1024] =  sf::Color(219, 35, 112, 255);
+		colorMap[2048] =  sf::Color(184, 37, 184, 255);
+		colorMap[4096] =  sf::Color(255, 77, 187, 255);
+		colorMap[8192] =  sf::Color(214, 0, 107, 255);
+		colorMap[16384] = sf::Color(204, 51, 255, 255);
+		colorMap[32768] = sf::Color(82, 82, 82, 255);
+	}
 public:
+	sf::Color getNumberColor(unsigned int value) {
+		if (colorMap.count(value)) {
+			return colorMap[value];
+		}
+		return colorMap[32768];
+	}
 	void drawGrid(sf::RenderWindow * window) {
 		sf::Font font;
 		if (!font.loadFromFile("OSReg.ttf"))
@@ -23,14 +52,21 @@ public:
 		int row, col;
 		for (row = 0; row < 4; row++) {
 			for (col = 0; col < 4; col++) {
-				sf::Text number;
-				number.setFont(font);
-				number.setString(std::to_string(gameArray[row][col]));
-				number.setCharacterSize(24);
-				number.setFillColor(sf::Color::Red);
-				number.setPosition(235 + row * 100, 230 + col * 100);
+				
+				if (gameArray[row][col] != 0) {
+					sf::Text number{ std::to_string(gameArray[row][col]), font};
+					sf::RectangleShape tile(sf::Vector2f(100.f, 100.f));
+					tile.setPosition(200 + row * 100, 200 + col * 100);
+					sf::Color numberColor = getNumberColor(gameArray[row][col]);
+					tile.setFillColor(numberColor);
+					number.setCharacterSize(24);
+					number.setFillColor(sf::Color::Black);
+					number.setPosition(210 + row * 100, 210 + col * 100);
+					
 
-				window->draw(number);
+					window->draw(tile);
+					window->draw(number);
+				}
 
 				sf::Vertex line_col[] =
 				{
@@ -281,7 +317,7 @@ public:
 	}
 	bool actuateBoard(unsigned int keycode) {
 		bool success = false;
-		unsigned int* newRandomTileDat;
+		unsigned int * newRandomTileDat;
 		switch (keycode) {
 		case 73:
 			success = moveUp();
@@ -316,6 +352,7 @@ public:
 	}
 	gameBoard() {
 		initGameBoard();
+		initializeColorMap();
 	}
 };
 
