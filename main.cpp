@@ -14,7 +14,7 @@ class gameBoard {
 private:
 	unsigned int gameArray[4][4];
 public:
-	void drawGrid(sf::RenderWindow* window) {
+	void drawGrid(sf::RenderWindow * window) {
 		sf::Font font;
 		if (!font.loadFromFile("OSReg.ttf"))
 		{
@@ -27,7 +27,7 @@ public:
 				number.setFont(font);
 				number.setString(std::to_string(gameArray[row][col]));
 				number.setCharacterSize(24);
-				number.setFillColor(sf::Color::Cyan);
+				number.setFillColor(sf::Color::Red);
 				number.setPosition(235 + row * 100, 230 + col * 100);
 
 				window->draw(number);
@@ -64,7 +64,7 @@ public:
 			}
 		}
 	}
-	unsigned int* returnRandomTile() {
+	unsigned int * returnRandomTile() {
 		int x, y, value;
 		x = y = value = 99;
 		unsigned int randomTile[3];
@@ -116,13 +116,119 @@ public:
 			std::cout << "Gameover?";
 		}
 	}
-	//void doSomething() {
-	//	unsigned int* newRandomTileDat = returnRandomTile();
-	//	gameArray[*(newRandomTileDat)][*(newRandomTileDat + 1)] = *(newRandomTileDat + 2);
-	//	if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
-	//		std::cout << "Gameover?";
-	//	}
-	//}
+	bool moveRight() {
+		bool success = false;
+		for (int row = 0; row < 4; row++) {
+			int streak = 0;
+			int memValue = 0;
+			for (int col = 3; col >= 0; col--) {
+				int thisValue = gameArray[col][row];
+
+				if (thisValue != 0 && thisValue != memValue) {
+					memValue = thisValue;
+					streak = 1;
+				}
+				else if (memValue == thisValue) {
+					streak++;
+				}
+
+				if (thisValue != 0) {
+					int col_2 = col;
+					while (col_2 + 1 < 4 && gameArray[col_2 + 1][row] == 0) {
+						col_2++;
+					}
+					if (col_2 != col) {
+						gameArray[col][row] = 0;
+						gameArray[col_2][row] = thisValue;
+						success = true;
+					}
+					if (thisValue == memValue && streak == 2 && col_2 + 1 < 4) {
+						gameArray[col_2 + 1][row] = thisValue * 2;
+						gameArray[col_2][row] = 0;
+					}
+				}
+
+			}
+		}
+		return success;
+	}
+	bool moveLeft() {
+		bool success = false;
+		
+		for (int row = 0; row < 4; row++) {
+			int streak = 0;
+			int memValue = 0;
+			for (int col = 0; col < 4; col++) {
+				int thisValue = gameArray[col][row];
+
+				if (thisValue != 0 && thisValue != memValue) {
+					memValue = thisValue;
+					streak = 1;
+				}
+				else if (memValue = thisValue) {
+					streak++;
+				}
+
+				if (thisValue != 0) {
+					int col_2 = col;
+					while (col_2 - 1 >= 0 && gameArray[col_2 - 1][row] == 0) {
+						col_2--;
+					}
+
+					if (col_2 != col) {
+						gameArray[col][row] = 0;
+						gameArray[col_2][row] = thisValue;
+						success = true;
+					}
+					if (thisValue == memValue && streak == 2 && col_2 - 1 >= 0) {
+						gameArray[col_2 - 1][row] = thisValue * 2;
+						gameArray[col_2][row] = 0;
+					}
+				}
+			}
+		}
+
+		return success;
+	}
+	bool moveDown(){
+		bool success = false;
+		unsigned int moveTotal = 0;
+
+		for (int col = 0; col < 4; col++) {
+			int streak = 0;
+			int memValue = 0;
+
+			for (int row = 3; row >= 0; row--) {
+				int thisValue = gameArray[col][row];
+
+				if (thisValue != 0 && thisValue != memValue) {
+					memValue = thisValue;
+					streak = 1;
+				}
+				else if (memValue == thisValue) {
+					streak++;
+				}
+
+				if (thisValue != 0) {
+					int row_2 = row;
+					while (row_2 + 1 < 4 && gameArray[col][row_2 + 1] == 0) {
+						row_2++;
+					}
+					if (row_2 != row) {
+						gameArray[col][row_2] = thisValue;
+						gameArray[col][row] = 0;
+						success = true;
+					}
+
+					if (thisValue == memValue && streak == 2 && row_2 + 1 < 4) {
+						gameArray[col][row_2 + 1] = thisValue * 2;
+						gameArray[col][row_2] = 0;
+					}
+				}
+			}
+		}
+		return success;
+	}
 	bool moveUp() {
 		bool success = false;
 		unsigned int moveTotal = 0;
@@ -154,6 +260,7 @@ public:
 					if (col_2 != col) {
 						gameArray[row][col_2] = thisValue;
 						gameArray[row][col] = 0;
+						success = true;
 					}
 
 					if (thisValue == memValue && streak == 2) {
@@ -170,15 +277,36 @@ public:
 
 			}
 		}
-
 		return success;
 	}
 	bool actuateBoard(unsigned int keycode) {
 		bool success = false;
+		unsigned int* newRandomTileDat;
 		switch (keycode) {
 		case 73:
 			success = moveUp();
-			unsigned int* newRandomTileDat = returnRandomTile();
+			newRandomTileDat = returnRandomTile();
+			if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+				std::cout << "Gameover?";
+			}
+			break;
+		case 74 :
+			success = moveDown();
+			newRandomTileDat = returnRandomTile();
+			if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+				std::cout << "Gameover?";
+			}
+			break;
+		case 71:
+			success = moveLeft();
+			newRandomTileDat = returnRandomTile();
+			if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+				std::cout << "Gameover?";
+			}
+			break;
+		case 72:
+			success = moveRight();
+			newRandomTileDat = returnRandomTile();
 			if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
 				std::cout << "Gameover?";
 			}
