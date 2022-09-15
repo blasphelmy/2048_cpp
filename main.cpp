@@ -65,8 +65,8 @@ public:
 		}
 	}
 	unsigned int* returnRandomTile() {
-		unsigned int x, y, value;
-		x = y = value = NULL;
+		int x, y, value;
+		x = y = value = 99;
 		unsigned int randomTile[3];
 		bool emptySpots = false;
 
@@ -80,9 +80,12 @@ public:
 		}
 		srand((unsigned)time(NULL));
 		do {
-			x = rand() % 4;
-			y = rand() % 4;
+			if (emptySpots == true){
+				x = rand() % 4;
+				y = rand() % 4;
+			}
 		} while (gameArray[x][y] != 0 && emptySpots == true);
+
 
 		value = 2;
 
@@ -96,7 +99,9 @@ public:
 		return randomTile;
 	}
 	bool setRandomTile(unsigned int row, unsigned int col, unsigned int val) {
-		if (row == NULL || col == NULL) return false;
+		std::cout << row;
+		std::cout << col << val << std::endl;
+		if (row == 99 || col == 99) return false;
 		gameArray[row][col] = val;
 		return true;
 	}
@@ -107,23 +112,63 @@ public:
 			}
 		}
 		unsigned int* newRandomTileDat = returnRandomTile();
-		if (setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+		if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
 			std::cout << "Gameover?";
 		}
 	}
-	void doSomething() {
-		unsigned int* newRandomTileDat = returnRandomTile();
-		gameArray[*(newRandomTileDat)][*(newRandomTileDat + 1)] = *(newRandomTileDat + 2);
-		if (setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
-			std::cout << "Gameover?";
-		}
-	}
-	bool moveLeft() {
+	//void doSomething() {
+	//	unsigned int* newRandomTileDat = returnRandomTile();
+	//	gameArray[*(newRandomTileDat)][*(newRandomTileDat + 1)] = *(newRandomTileDat + 2);
+	//	if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+	//		std::cout << "Gameover?";
+	//	}
+	//}
+	bool moveUp() {
 		bool success = false;
 		unsigned int moveTotal = 0;
 
 		for (unsigned int row = 0; row < 4; row++) {
 			unsigned int streak = 0;
+			int memValue = 0;
+
+			for (unsigned int col = 0; col < 4; col++) {
+				
+				unsigned int thisValue = gameArray[row][col];
+
+				if (thisValue != 0 && thisValue != memValue) {
+					memValue = thisValue;
+					streak = 1;
+				}
+				else if (memValue == thisValue) {
+					streak++;
+				}
+
+				if (thisValue != 0) {
+					unsigned int col_2 = col;
+
+					do {
+						col_2--;
+					} while (col_2 < 4 && gameArray[row][col_2] == 0);
+					col_2++;
+
+					if (col_2 != col) {
+						gameArray[row][col_2] = thisValue;
+						gameArray[row][col] = 0;
+					}
+
+					if (thisValue == memValue && streak == 2) {
+						for (unsigned int index = 0; index < 2; index++) {
+							gameArray[row][col_2 - index] = 0;
+							if (index == 2 - 1) {
+								// this.actuateTile(row, col_2, row, col_2 - index, thisValue * this.requiredStreak);
+								gameArray[row][col_2 - index] = thisValue * 2;
+								col_2 = col_2 - index;
+							}
+						}
+					}
+				}
+
+			}
 		}
 
 		return success;
@@ -131,10 +176,15 @@ public:
 	bool actuateBoard(unsigned int keycode) {
 		bool success = false;
 		switch (keycode) {
-		case 71:
-			success = moveLeft();
+		case 73:
+			success = moveUp();
+			unsigned int* newRandomTileDat = returnRandomTile();
+			if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2))) {
+				std::cout << "Gameover?";
+			}
 			break;
 		}
+		return success;
 	}
 	gameBoard() {
 		initGameBoard();
@@ -161,7 +211,7 @@ void mainControls(sf::RenderWindow* window) {
 			/*std::cout << "Keypressed!";
 			newGameBoard.doSomething();*/
 			//left = 71 up = 73 right = 72 down = 74
-			std::cout << event.key.code << std::endl;
+			newGameBoard.actuateBoard(event.key.code);
 			break;
 
 			// we don't process other types of events
