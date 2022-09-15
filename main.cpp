@@ -18,7 +18,7 @@ public:
 		sf::Font font;
 		if (!font.loadFromFile("OSReg.ttf"))
 		{
-			// error...
+			std::cout << "Failed to load font" << std::endl;
 		}
 		int row, col;
 		for (row = 0; row < 4; row++) {
@@ -120,14 +120,19 @@ public:
 	}
 	bool moveLeft() {
 		bool success = false;
+		unsigned int moveTotal = 0;
 
-
+		for (unsigned int row = 0; row < 4; row++) {
+			unsigned int streak = 0;
+		}
 
 		return success;
 	}
 	bool actuateBoard(unsigned int keycode) {
+		bool success = false;
 		switch (keycode) {
 		case 71:
+			success = moveLeft();
 			break;
 		}
 	}
