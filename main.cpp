@@ -12,7 +12,7 @@
 
 #include "gameBoard.h"
 
-const int fps = 180;
+const int fps = 220;
 
 gameBoard newGameBoard;
 sf::Font font;
