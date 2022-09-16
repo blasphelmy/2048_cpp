@@ -44,7 +44,7 @@ public:
 	bool moveLeft();
 	bool moveDown();
 	bool moveUp();
-	bool actuateBoard(unsigned int keycode);
+	bool actuateBoard(int keycode);
 	gameBoard() {
 		initGameBoard();
 		initializeColorMap();
