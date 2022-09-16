@@ -396,3 +396,29 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+x64/Debug/2048_cpp.exe
+x64/Debug/2048_cpp.ilk
+x64/Debug/2048_cpp.log
+x64/Debug/2048_cpp.pdb
+x64/Debug/2048_cpp.tlog/CL.command.1.tlog
+x64/Debug/2048_cpp.tlog/CL.read.1.tlog
+x64/Debug/2048_cpp.tlog/CL.write.1.tlog
+x64/Debug/2048_cpp.tlog/link.command.1.tlog
+x64/Debug/2048_cpp.tlog/link.read.1.tlog
+x64/Debug/2048_cpp.tlog/link.write.1.tlog
+x64/Debug/main.obj
+x64/Debug/vc143.idb
+x64/Debug/vc143.pdb
+x64/Debug/2048_cpp.exe
+x64/Debug/2048_cpp.ilk
+x64/Debug/2048_cpp.log
+x64/Debug/2048_cpp.pdb
+x64/Debug/2048_cpp.tlog/CL.command.1.tlog
+x64/Debug/2048_cpp.tlog/CL.read.1.tlog
+x64/Debug/2048_cpp.tlog/CL.write.1.tlog
+x64/Debug/2048_cpp.tlog/link.command.1.tlog
+x64/Debug/2048_cpp.tlog/link.read.1.tlog
+x64/Debug/2048_cpp.tlog/link.write.1.tlog
+x64/Debug/main.obj
+x64/Debug/vc143.idb
+x64/Debug/vc143.pdb

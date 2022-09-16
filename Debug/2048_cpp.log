@@ -1,16 +1,11 @@
 ﻿  main.cpp
 C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\main.cpp(1,9): warning C4068: unknown pragma 'GCC'
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(33,18): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
 C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(34,18): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(40,18): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(35,18): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
           with
           [
               T=float
@@ -20,17 +15,22 @@ C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(41,18): warning C4244:
           [
               T=float
           ]
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(148,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(148,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(225,38): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(42,18): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(226,38): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(145,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(145,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(222,38): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(220): warning C4172: returning address of local variable or temporary: randomTile
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(223,38): warning C4244: '=': conversion from 'unsigned int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\gameBoard.h(217): warning C4172: returning address of local variable or temporary: randomTile
   2048_cpp.vcxproj -> C:\Users\David Nguyen\Desktop\gitHub\2048_cpp\Debug\2048_cpp.exe

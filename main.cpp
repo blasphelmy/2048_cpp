@@ -12,7 +12,7 @@
 
 #include "gameBoard.h"
 
-const int fps = 220;
+const int fps = 240;
 
 gameBoard newGameBoard;
 sf::Font font;
@@ -52,17 +52,9 @@ int main(int argc, char** argv) {
 		std::cout << "Failed to load font" << std::endl;
 	}
 	newGameBoard.font = font;
-	int counter = 0;
 	while (window.isOpen()) {
-		sf::Text count(std::to_string(counter++), font);
-		count.setPosition(1.f, 1.f);
-		count.setFillColor(sf::Color::Green);
-		count.setCharacterSize(14);
-
-		if (counter > 20000) counter = 0;
 		//std::cout << "Loop" << std::endl;
 		window.clear(sf::Color(211, 193, 172, 255));
-		window.draw(count);
 		bool isActive = newGameBoard.renderGameBoard(&window);
 		mainControls(&window, isActive);
 		window.display();
