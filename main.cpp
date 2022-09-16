@@ -12,9 +12,12 @@
 
 #include "gameBoard.h"
 
-gameBoard newGameBoard;
+const int fps = 180;
 
-void mainControls(sf::RenderWindow* window) {
+gameBoard newGameBoard;
+sf::Font font;
+
+void mainControls(sf::RenderWindow* window, bool isActive) {
 	sf::Event event;
 
 	while (window->pollEvent(event))
@@ -30,7 +33,7 @@ void mainControls(sf::RenderWindow* window) {
 		// key pressed
 		case sf::Event::KeyPressed:
 			//left = 71 up = 73 right = 72 down = 74
-			newGameBoard.actuateBoard(event.key.code);
+			if(!isActive) newGameBoard.actuateBoard(event.key.code);
 			break;
 
 		// we don't process other types of events
@@ -42,13 +45,26 @@ void mainControls(sf::RenderWindow* window) {
 int main(int argc, char** argv) {
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(768, 768), "2048");
-	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(144);
-
+	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(fps);
+	if (!font.loadFromFile("OSReg.ttf"))
+	{
+		std::cout << "Failed to load font" << std::endl;
+	}
+	newGameBoard.font = font;
+	int counter = 0;
 	while (window.isOpen()) {
+		sf::Text count(std::to_string(counter++), font);
+		count.setPosition(1.f, 1.f);
+		count.setFillColor(sf::Color::Green);
+		count.setCharacterSize(14);
+
+		if (counter > 20000) counter = 0;
+		//std::cout << "Loop" << std::endl;
 		window.clear(sf::Color(211, 193, 172, 255));
-		newGameBoard.renderGameBoard(&window);
-		mainControls(&window);
+		window.draw(count);
+		bool isActive = newGameBoard.renderGameBoard(&window);
+		mainControls(&window, isActive);
 		window.display();
 	}
 	return 0;
