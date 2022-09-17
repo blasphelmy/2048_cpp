@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <iostream>
+#include <queue>
 #include <stack>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -13,7 +14,7 @@
 class gameBoard {
 private:
 	tile gameArray[4][4];
-	std::stack <tile> animationQueue;
+	std::queue <tile> animationQueue;
 	std::map<unsigned int, sf::Color> colorMap;
 	void initializeColorMap() {
 		colorMap[2] =     sf::Color(238, 228, 218, 255);
@@ -46,8 +47,8 @@ public:
 	bool moveUp();
 	bool actuateBoard(int keycode);
 	gameBoard() {
-		initGameBoard();
 		initializeColorMap();
+		initGameBoard();
 	}
 };
 

@@ -18,6 +18,7 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 {
 	if (gamePieceBase->dummyValue > 0) {
 		tile dummyBase;
+		dummyBase.setCurrentPosition(10, 10, colorMap[gamePieceBase->dummyValue]);
 		dummyBase.value = gamePieceBase->value;
 		dummyBase.curPos = gamePieceBase->desPos;
 		drawGamePiece(&dummyBase, &*window);
@@ -25,7 +26,7 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 
 	sf::RectangleShape gamePiece(sf::Vector2f(95.f, 95.f));
 	sf::Text number{std::to_string(gamePieceBase->value), font};
-	sf::Color numberColor = getNumberColor(gamePieceBase->value);
+	sf::Color numberColor((gamePieceBase->color.x), (gamePieceBase->color.y), (gamePieceBase->color.z));
 	gamePiece.setFillColor(numberColor);
 	gamePiece.setPosition(gamePieceBase->getCurrentPos().x, gamePieceBase->getCurrentPos().y);
 
@@ -52,6 +53,7 @@ bool gameBoard::setRandomTile(unsigned int row, unsigned int col, unsigned int v
 	gameArray[row][col].value = val;
 	gameArray[row][col].curPos.x = 200 + static_cast<float>(row) * 100;
 	gameArray[row][col].curPos.y = 200 + static_cast<float>(col) * 100;
+	gameArray[row][col].setCurrentPosition(row, col, colorMap[val]);
 	return true;
 }
 
@@ -81,12 +83,12 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 			}
 		}
 	}
-	std::stack<tile> newStack;
+	std::queue<tile> newStack;
 
 	while (!animationQueue.empty())
 	{
 		activeAnimation = true;
-		tile currTile = animationQueue.top();
+		tile currTile = animationQueue.front();
 		animationQueue.pop();
 		currTile.setTileFramePos();
 		drawGamePiece(&currTile, &*window);
@@ -181,6 +183,7 @@ bool gameBoard::moveRight()
 			if (thisValue != 0)
 			{
 				int col_2 = col;
+				unsigned int thisValueCpy = thisValue;
 				tile newAnimatedTile;
 				while (col_2 + 1 < 4 && gameArray[col_2 + 1][row].value == 0)
 				{
@@ -190,22 +193,22 @@ bool gameBoard::moveRight()
 				{
 					gameArray[col][row].resetTile();
 					gameArray[col_2][row].value = thisValue;
-					gameArray[col_2][row].setCurrentPosition(col_2, row);
+					gameArray[col_2][row].setCurrentPosition(col_2, row, colorMap[thisValue]);
 					success = true;
 				}
 				if (thisValue == memValue && streak == 2 && col_2 + 1 < 4)
 				{
 					newAnimatedTile.dummyValue = gameArray[col_2 + 1][row].value;
-					gameArray[col_2 + 1][row].value = thisValue * 2;
+					gameArray[col_2 + 1][row].value = thisValueCpy = thisValue * 2;
 					gameArray[col_2][row].resetTile();
-					gameArray[col_2 + 1][row].setCurrentPosition(col_2 + 1, row);
+					gameArray[col_2 + 1][row].setCurrentPosition(col_2 + 1, row, colorMap[thisValue * 2]);
 					col_2++;
 				}
 				if (col_2 != col)
 				{
 					gameArray[col][row].isActive = gameArray[col_2][row].isActive = true;
-					newAnimatedTile.setCurrentPosition(col, row);
-					newAnimatedTile.setDestinationPosition(col_2, row);
+					newAnimatedTile.setCurrentPosition(col, row, colorMap[thisValue]);
+					newAnimatedTile.setDestinationPosition(col_2, row, colorMap[thisValue], colorMap[thisValueCpy]);
 					newAnimatedTile.value = thisValue;
 					animationQueue.push(newAnimatedTile);
 				}
@@ -239,6 +242,7 @@ bool gameBoard::moveLeft()
 			if (thisValue != 0)
 			{
 				int col_2 = col;
+				unsigned int thisValueCpy = thisValue;
 				tile newAnimatedTile;
 				while (col_2 > 0 && gameArray[col_2 - 1][row].value == 0)
 				{
@@ -249,22 +253,22 @@ bool gameBoard::moveLeft()
 				{
 					gameArray[col][row].resetTile();
 					gameArray[col_2][row].value = thisValue;
-					gameArray[col_2][row].setCurrentPosition(col_2, row);
+					gameArray[col_2][row].setCurrentPosition(col_2, row, colorMap[thisValue]);
 					success = true;
 				}
 				if (thisValue == memValue && streak == 2 && col_2 - 1 >= 0)
 				{
 					newAnimatedTile.dummyValue = thisValue;
 					gameArray[col_2][row].resetTile();
-					gameArray[col_2 - 1][row].value = thisValue * 2;
-					gameArray[col_2 - 1][row].setCurrentPosition(col_2 - 1, row);
+					gameArray[col_2 - 1][row].value = thisValueCpy = thisValue * 2;
+					gameArray[col_2 - 1][row].setCurrentPosition(col_2 - 1, row, colorMap[thisValue * 2]);
 					col_2--;
 				}
 				if (col_2 != col)
 				{
 					gameArray[col][row].isActive = gameArray[col_2][row].isActive = true;
-					newAnimatedTile.setCurrentPosition(col, row);
-					newAnimatedTile.setDestinationPosition(col_2, row);
+					newAnimatedTile.setCurrentPosition(col, row, colorMap[thisValue]);
+					newAnimatedTile.setDestinationPosition(col_2, row, colorMap[thisValue], colorMap[thisValueCpy]);
 					newAnimatedTile.value = thisValue;
 					animationQueue.push(newAnimatedTile);
 				}
@@ -301,6 +305,7 @@ bool gameBoard::moveDown()
 			if (thisValue != 0)
 			{
 				int row_2 = row;
+				unsigned int thisValueCpy = thisValue;
 				tile newAnimatedTile;
 				while (row_2 + 1 < 4 && gameArray[col][row_2 + 1].value == 0)
 				{
@@ -310,23 +315,23 @@ bool gameBoard::moveDown()
 				{
 					gameArray[col][row].resetTile();
 					gameArray[col][row_2].value = thisValue;
-					gameArray[col][row_2].setCurrentPosition(col, row_2);
+					gameArray[col][row_2].setCurrentPosition(col, row_2, colorMap[thisValue]);
 					success = true;
 				}
 
 				if (thisValue == memValue && streak == 2 && row_2 + 1 < 4)
 				{
 					newAnimatedTile.dummyValue = thisValue;
-					gameArray[col][row_2 + 1].value = thisValue * 2;
+					gameArray[col][row_2 + 1].value = thisValueCpy = thisValue * 2;
 					gameArray[col][row_2].resetTile();
-					gameArray[col][row_2 + 1].setCurrentPosition(col, row_2 + 1);
+					gameArray[col][row_2 + 1].setCurrentPosition(col, row_2 + 1, colorMap[thisValue * 2]);
 					row_2++;
 				}
 				if (row_2 != row)
 				{
 					gameArray[col][row].isActive = gameArray[col][row_2].isActive = true;
-					newAnimatedTile.setCurrentPosition(col, row);
-					newAnimatedTile.setDestinationPosition(col, row_2);
+					newAnimatedTile.setCurrentPosition(col, row, colorMap[thisValue]);
+					newAnimatedTile.setDestinationPosition(col, row_2, colorMap[thisValue], colorMap[thisValueCpy]);
 					newAnimatedTile.value = thisValue;
 					animationQueue.push(newAnimatedTile);
 				}
@@ -363,6 +368,7 @@ bool gameBoard::moveUp()
 			if (thisValue != 0)
 			{
 				unsigned int col_2 = col;
+				unsigned int thisValueCpy = thisValue;
 				tile newAnimatedTile;
 				do
 				{
@@ -373,7 +379,7 @@ bool gameBoard::moveUp()
 				if (col_2 != col)
 				{
 					gameArray[row][col_2].value = thisValue;
-					gameArray[row][col_2].setCurrentPosition(row, col_2);
+					gameArray[row][col_2].setCurrentPosition(row, col_2, colorMap[thisValue]);
 					gameArray[row][col].resetTile();
 					success = true;
 				}
@@ -386,8 +392,8 @@ bool gameBoard::moveUp()
 						if (index == 2 - 1)
 						{
 							newAnimatedTile.dummyValue = thisValue;
-							gameArray[row][col_2 - index].value = thisValue * 2;
-							gameArray[row][col_2 - index].setCurrentPosition(row, col_2 - index);
+							gameArray[row][col_2 - index].value = thisValueCpy = thisValue * 2;
+							gameArray[row][col_2 - index].setCurrentPosition(row, col_2 - index, colorMap[thisValue * 2]);
 							col_2 = col_2 - index;
 						}
 					}
@@ -395,8 +401,8 @@ bool gameBoard::moveUp()
 				if (col_2 != col)
 				{
 					gameArray[row][col].isActive = gameArray[row][col_2].isActive = true;
-					newAnimatedTile.setCurrentPosition(row, col);
-					newAnimatedTile.setDestinationPosition(row, col_2);
+					newAnimatedTile.setCurrentPosition(row, col, colorMap[thisValue]);
+					newAnimatedTile.setDestinationPosition(row, col_2, colorMap[thisValue], colorMap[thisValueCpy]);
 					newAnimatedTile.value = thisValue;
 					animationQueue.push(newAnimatedTile);
 				}

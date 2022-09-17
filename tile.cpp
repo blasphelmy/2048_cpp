@@ -11,14 +11,17 @@ sf::Vector2f tile::getCurrentPos() {
 
 	return thisCurPos;
 }
-
-void tile::setCurrentPosition(unsigned int x, unsigned int y) {
+sf::Color tile::getColor(std::map<unsigned int, sf::Color> * colorMap) {
+	return sf::Color(color.x, color.y, color.z);
+}
+void tile::setCurrentPosition(unsigned int x, unsigned int y, sf::Color newColor) {
 	origin.x = x;
 	origin.y = y;
 	curPos.x = 200 + x * 100;
 	curPos.y = 200 + y * 100;
+	color = sf::Vector3f(static_cast<float>(newColor.r), static_cast<float>(newColor.g), static_cast<float>(newColor.b));
 }
-void tile::setDestinationPosition(unsigned int x, unsigned int y) {
+void tile::setDestinationPosition(unsigned int x, unsigned int y, sf::Color oldColor, sf::Color newColor) {
 	destinationRowCol.x = x;
 	destinationRowCol.y = y;
 	isActive = true;
@@ -27,6 +30,13 @@ void tile::setDestinationPosition(unsigned int x, unsigned int y) {
 	velocity = (desPos - curPos);
 	velocity.x /= velocityFactor;
 	velocity.y /= velocityFactor;
+
+	color = sf::Vector3f(static_cast<float>(oldColor.r), static_cast<float>(oldColor.g), static_cast<float>(oldColor.b));
+	sf::Vector3f destinationColor(static_cast<float>(newColor.r), static_cast<float>(newColor.g), static_cast<float>(newColor.b));
+	colorChangeVelocity = destinationColor - color;
+	colorChangeVelocity.x = colorChangeVelocity.x / velocityFactor;
+	colorChangeVelocity.y = colorChangeVelocity.y / velocityFactor;
+	colorChangeVelocity.z = colorChangeVelocity.z / velocityFactor;
 }
 void tile::resetTile() {
 	isActive = false;
@@ -63,4 +73,5 @@ void tile::setTileFramePos() {
 			curPos.y = desPos.y;
 		}
 	}
+	color = color + colorChangeVelocity;
 }
