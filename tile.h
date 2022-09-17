@@ -8,12 +8,15 @@
 
 class tile {
 public:
+	unsigned int velocityFactor = 15;
 	tile() {
 		isActive = false;
 		value = 0;
+		dummyValue = 0;
 	}
 	bool isActive;
 	unsigned int value;
+	unsigned int dummyValue;
 	sf::Vector2i origin;
 	sf::Vector2i destinationRowCol;
 	sf::Vector2f velocity;

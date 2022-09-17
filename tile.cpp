@@ -7,7 +7,6 @@
 
 sf::Vector2f tile::getCurrentPos() {
 	sf::Vector2f thisCurPos;
-
 	thisCurPos = curPos;
 
 	return thisCurPos;
@@ -26,8 +25,8 @@ void tile::setDestinationPosition(unsigned int x, unsigned int y) {
 	desPos.x = 200 + x * 100;
 	desPos.y = 200 + y * 100;
 	velocity = (desPos - curPos);
-	velocity.x /= 20;
-	velocity.y /= 20;
+	velocity.x /= velocityFactor;
+	velocity.y /= velocityFactor;
 }
 void tile::resetTile() {
 	isActive = false;
@@ -35,6 +34,7 @@ void tile::resetTile() {
 	curPos = sf::Vector2f();
 	desPos = sf::Vector2f();
 	value = 0;
+	dummyValue = 0;
 }
 
 void tile::setTileFramePos() {
