@@ -18,9 +18,10 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 {
 	if (gamePieceBase->dummyValue > 0) {
 		tile dummyBase;
-		dummyBase.setCurrentPosition(10, 10, colorMap[gamePieceBase->dummyValue]);
+		//dummyBase.setCurrentPosition(10, 10, colorMap[gamePieceBase->dummyValue]);
 		dummyBase.value = gamePieceBase->value;
 		dummyBase.curPos = gamePieceBase->desPos;
+		dummyBase.color = gamePieceBase->color;
 		drawGamePiece(&dummyBase, &*window);
 	}
 
