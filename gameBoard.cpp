@@ -16,9 +16,10 @@ sf::Color gameBoard::getNumberColor(unsigned int value)
 
 void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 {
-	if (gamePieceBase->dummyValue > 0) {
+	if (gamePieceBase->dummyValue > 0)
+	{
 		tile dummyBase;
-		//dummyBase.setCurrentPosition(10, 10, colorMap[gamePieceBase->dummyValue]);
+		// dummyBase.setCurrentPosition(10, 10, colorMap[gamePieceBase->dummyValue]);
 		dummyBase.value = gamePieceBase->value;
 		dummyBase.curPos = gamePieceBase->desPos;
 		dummyBase.color = gamePieceBase->color;
@@ -49,8 +50,8 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 }
 bool gameBoard::setRandomTile(unsigned int row, unsigned int col, unsigned int val)
 {
-	if (row == 99 || col == 99)
-		return false;
+	if (row == 99 || col == 99) return false;
+
 	gameArray[row][col].value = val;
 	gameArray[row][col].curPos.x = 200 + static_cast<float>(row) * 100;
 	gameArray[row][col].curPos.y = 200 + static_cast<float>(col) * 100;
@@ -62,6 +63,11 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 {
 	bool activeAnimation = false;
 	int row, col;
+
+	sf::Text scoreElement = sf::Text("Score : " + std::to_string(score), font);
+
+	window->draw(scoreElement);
+
 	for (row = 0; row < 4; row++)
 	{
 		for (col = 0; col < 4; col++)
@@ -71,9 +77,13 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 				tileBG.setSize(sf::Vector2f(95.f, 100.f));
 			if (col == 3)
 				tileBG.setSize(sf::Vector2f(100.f, 95.f));
+			if (row == 3 && col == 3)
+			{
+				tileBG.setSize(sf::Vector2f(95.f, 95.f));
+			}
 			tileBG.setPosition(200 + row * 100, 200 + col * 100);
 			tileBG.setOutlineThickness(5.0);
-			tileBG.setOutlineColor(sf::Color(213, 198, 179, 255));
+			tileBG.setOutlineColor(sf::Color(203, 188, 169, 255));
 			sf::Color numberColor(223, 208, 189, 255);
 			tileBG.setFillColor(numberColor);
 			window->draw(tileBG);
@@ -84,7 +94,7 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 			}
 		}
 	}
-	std::queue<tile> newStack;
+	std::queue<tile> newQueue;
 
 	while (!animationQueue.empty())
 	{
@@ -95,14 +105,14 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 		drawGamePiece(&currTile, &*window);
 		if (currTile.isActive)
 		{
-			newStack.push(currTile);
+			newQueue.push(currTile);
 		}
 		else
 		{
 			gameArray[currTile.origin.x][currTile.origin.y].isActive = gameArray[currTile.destinationRowCol.x][currTile.destinationRowCol.y].isActive = false;
 		}
 	}
-	animationQueue = newStack;
+	animationQueue = newQueue;
 	return activeAnimation;
 }
 unsigned int *gameBoard::returnRandomTile()
@@ -147,6 +157,7 @@ unsigned int *gameBoard::returnRandomTile()
 }
 void gameBoard::initGameBoard()
 {
+	score = 0;
 	for (unsigned int row = 0; row < 4; row++)
 	{
 		for (unsigned int col = 0; col < 4; col++)
@@ -199,6 +210,7 @@ bool gameBoard::moveRight()
 				}
 				if (thisValue == memValue && streak == 2 && col_2 + 1 < 4)
 				{
+					score += thisValue * 2;
 					newAnimatedTile.dummyValue = gameArray[col_2 + 1][row].value;
 					gameArray[col_2 + 1][row].value = thisValueCpy = thisValue * 2;
 					gameArray[col_2][row].resetTile();
@@ -259,6 +271,7 @@ bool gameBoard::moveLeft()
 				}
 				if (thisValue == memValue && streak == 2 && col_2 - 1 >= 0)
 				{
+					score += thisValue * 2;
 					newAnimatedTile.dummyValue = thisValue;
 					gameArray[col_2][row].resetTile();
 					gameArray[col_2 - 1][row].value = thisValueCpy = thisValue * 2;
@@ -322,6 +335,7 @@ bool gameBoard::moveDown()
 
 				if (thisValue == memValue && streak == 2 && row_2 + 1 < 4)
 				{
+					score += thisValue * 2;
 					newAnimatedTile.dummyValue = thisValue;
 					gameArray[col][row_2 + 1].value = thisValueCpy = thisValue * 2;
 					gameArray[col][row_2].resetTile();
@@ -387,6 +401,7 @@ bool gameBoard::moveUp()
 
 				if (thisValue == memValue && streak == 2)
 				{
+					score += thisValue * 2;
 					for (unsigned int index = 0; index < 2; index++)
 					{
 						gameArray[row][col_2 - index].resetTile();
@@ -416,7 +431,7 @@ bool gameBoard::actuateBoard(int keycode)
 {
 	bool success = false;
 	unsigned int *newRandomTileDat;
-	
+
 	switch (keycode)
 	{
 	case 73:

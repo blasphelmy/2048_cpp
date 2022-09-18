@@ -1,18 +1,19 @@
 #pragma once
+#include "tile.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <queue>
-#include <stack>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "tile.h"
 
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
 class gameBoard {
 private:
+	unsigned int score;
 	tile gameArray[4][4];
 	std::queue <tile> animationQueue;
 	std::map<unsigned int, sf::Color> colorMap;
