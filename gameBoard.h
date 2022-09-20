@@ -37,6 +37,7 @@ private:
 public:
 	sf::Font font;
 	sf::Color getNumberColor(unsigned int value);
+	std::vector<std::vector<bool>> generate2dArray(unsigned int row, unsigned int col);
 	void drawGamePiece(tile* gamePieceBase, sf::RenderWindow* window);
 	bool renderGameBoard(sf::RenderWindow* window);
 	unsigned int* returnRandomTile();

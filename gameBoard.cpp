@@ -171,9 +171,27 @@ void gameBoard::initGameBoard()
 		std::cout << "Gameover?";
 	}
 }
+
+std::vector<std::vector<bool>> gameBoard::generate2dArray(unsigned int row, unsigned int col) {
+	std::vector<std::vector<bool>> memoryMap(row, std::vector<bool>(col, 0));
+
+	for (unsigned int row = 0; row < 4; row++) {
+		for (unsigned int col = 0; col < 4; col++) {
+			memoryMap[col][row] = true;
+			if (gameArray[col][row].value > 0) {
+				memoryMap[col][row] = false;
+			}
+		}
+	}
+
+	return memoryMap;
+}
+
 bool gameBoard::moveRight()
 {
 	bool success = false;
+	std::vector<std::vector<bool>> memoryMap = generate2dArray(4, 4);
+
 	for (int row = 0; row < 4; row++)
 	{
 		int streak = 0;
@@ -211,7 +229,7 @@ bool gameBoard::moveRight()
 				if (thisValue == memValue && streak == 2 && col_2 + 1 < 4)
 				{
 					score += thisValue * 2;
-					newAnimatedTile.dummyValue = gameArray[col_2 + 1][row].value;
+					if(memoryMap[col_2 + 1][row] == false) newAnimatedTile.dummyValue = gameArray[col_2 + 1][row].value;
 					gameArray[col_2 + 1][row].value = thisValueCpy = thisValue * 2;
 					gameArray[col_2][row].resetTile();
 					gameArray[col_2 + 1][row].setCurrentPosition(col_2 + 1, row, colorMap[thisValue * 2]);
@@ -233,6 +251,7 @@ bool gameBoard::moveRight()
 bool gameBoard::moveLeft()
 {
 	bool success = false;
+	std::vector<std::vector<bool>> memoryMap = generate2dArray(4, 4);
 
 	for (int row = 3; row >= 0; row--)
 	{
@@ -272,7 +291,7 @@ bool gameBoard::moveLeft()
 				if (thisValue == memValue && streak == 2 && col_2 - 1 >= 0)
 				{
 					score += thisValue * 2;
-					newAnimatedTile.dummyValue = thisValue;
+					if(memoryMap[col_2 - 1][row] == false) newAnimatedTile.dummyValue = thisValue;
 					gameArray[col_2][row].resetTile();
 					gameArray[col_2 - 1][row].value = thisValueCpy = thisValue * 2;
 					gameArray[col_2 - 1][row].setCurrentPosition(col_2 - 1, row, colorMap[thisValue * 2]);
@@ -296,6 +315,7 @@ bool gameBoard::moveDown()
 {
 	bool success = false;
 	unsigned int moveTotal = 0;
+	std::vector<std::vector<bool>> memoryMap = generate2dArray(4, 4);
 
 	for (int col = 0; col < 4; col++)
 	{
@@ -336,7 +356,7 @@ bool gameBoard::moveDown()
 				if (thisValue == memValue && streak == 2 && row_2 + 1 < 4)
 				{
 					score += thisValue * 2;
-					newAnimatedTile.dummyValue = thisValue;
+					if(memoryMap[col][row_2 + 1] == false) newAnimatedTile.dummyValue = thisValue;
 					gameArray[col][row_2 + 1].value = thisValueCpy = thisValue * 2;
 					gameArray[col][row_2].resetTile();
 					gameArray[col][row_2 + 1].setCurrentPosition(col, row_2 + 1, colorMap[thisValue * 2]);
@@ -359,6 +379,7 @@ bool gameBoard::moveUp()
 {
 	bool success = false;
 	unsigned int moveTotal = 0;
+	std::vector<std::vector<bool>> memoryMap = generate2dArray(4, 4);
 
 	for (unsigned int row = 0; row < 4; row++)
 	{
@@ -407,7 +428,7 @@ bool gameBoard::moveUp()
 						gameArray[row][col_2 - index].resetTile();
 						if (index == 2 - 1)
 						{
-							newAnimatedTile.dummyValue = thisValue;
+							if(memoryMap[row][col_2 - index] == false )newAnimatedTile.dummyValue = thisValue;
 							gameArray[row][col_2 - index].value = thisValueCpy = thisValue * 2;
 							gameArray[row][col_2 - index].setCurrentPosition(row, col_2 - index, colorMap[thisValue * 2]);
 							col_2 = col_2 - index;
