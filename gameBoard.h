@@ -40,8 +40,8 @@ public:
 	std::vector<std::vector<bool>> generate2dArray(unsigned int row, unsigned int col);
 	void drawGamePiece(tile* gamePieceBase, sf::RenderWindow* window);
 	bool renderGameBoard(sf::RenderWindow* window);
-	unsigned int* returnRandomTile();
-	bool setRandomTile(unsigned int row, unsigned int col, unsigned int val);
+	sf::Vector3i returnRandomTile();
+	bool setRandomTile(sf::Vector3i data);
 	void initGameBoard();
 	bool moveRight();
 	bool moveLeft();

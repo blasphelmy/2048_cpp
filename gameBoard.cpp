@@ -48,14 +48,14 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 	window->draw(gamePiece);
 	window->draw(number);
 }
-bool gameBoard::setRandomTile(unsigned int row, unsigned int col, unsigned int val)
+bool gameBoard::setRandomTile(sf::Vector3i data)
 {
-	if (row == 99 || col == 99) return false;
+	if (data.x == 99 || data.y == 99) return false;
 
-	gameArray[row][col].value = val;
-	gameArray[row][col].curPos.x = 200 + static_cast<float>(row) * 100;
-	gameArray[row][col].curPos.y = 200 + static_cast<float>(col) * 100;
-	gameArray[row][col].setCurrentPosition(row, col, colorMap[val]);
+	gameArray[data.x][data.y].value = data.z;
+	gameArray[data.x][data.y].curPos.x = 200 + static_cast<float>(data.x) * 100;
+	gameArray[data.x][data.y].curPos.y = 200 + static_cast<float>(data.y) * 100;
+	gameArray[data.x][data.y].setCurrentPosition(data.x, data.y, colorMap[data.z]);
 	return true;
 }
 
@@ -115,11 +115,11 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 	animationQueue = newQueue;
 	return activeAnimation;
 }
-unsigned int *gameBoard::returnRandomTile()
+sf::Vector3i gameBoard::returnRandomTile()
 {
 	int x, y, value;
 	x = y = value = 99;
-	unsigned int randomTile[3];
+	sf::Vector3i randomTile;
 	bool emptySpots = false;
 
 	for (unsigned int row = 0; row < 4; row++)
@@ -149,9 +149,9 @@ unsigned int *gameBoard::returnRandomTile()
 	{
 		value = 4;
 	}
-	randomTile[0] = x;
-	randomTile[1] = y;
-	randomTile[2] = value;
+	randomTile.x = x;
+	randomTile.y = y;
+	randomTile.z = value;
 
 	return randomTile;
 }
@@ -165,8 +165,8 @@ void gameBoard::initGameBoard()
 			gameArray[row][col].value = 0;
 		}
 	}
-	unsigned int *newRandomTileDat = returnRandomTile();
-	if (!setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2)))
+	sf::Vector3i newRandomTileDat = returnRandomTile();
+	if (!setRandomTile(newRandomTileDat))
 	{
 		std::cout << "Gameover?";
 	}
@@ -381,15 +381,14 @@ bool gameBoard::moveUp()
 	unsigned int moveTotal = 0;
 	std::vector<std::vector<bool>> memoryMap = generate2dArray(4, 4);
 
-	for (unsigned int row = 0; row < 4; row++)
+	for (int col = 0; col < 4; col++)
 	{
-		unsigned int streak = 0;
+		int streak = 0;
 		int memValue = 0;
 
-		for (unsigned int col = 0; col < 4; col++)
+		for (int row = 0; row < 4; row++)
 		{
-
-			unsigned int thisValue = gameArray[row][col].value;
+			int thisValue = gameArray[col][row].value;
 
 			if (thisValue != 0 && thisValue != memValue)
 			{
@@ -403,43 +402,35 @@ bool gameBoard::moveUp()
 
 			if (thisValue != 0)
 			{
-				unsigned int col_2 = col;
+				int row_2 = row;
 				unsigned int thisValueCpy = thisValue;
 				tile newAnimatedTile;
-				do
+				while (row_2 - 1 >= 0 && gameArray[col][row_2 - 1].value == 0)
 				{
-					col_2--;
-				} while (col_2 < 4 && gameArray[row][col_2].value == 0);
-				col_2++;
-
-				if (col_2 != col)
+					row_2--;
+				}
+				if (row_2 != row)
 				{
-					gameArray[row][col_2].value = thisValue;
-					gameArray[row][col_2].setCurrentPosition(row, col_2, colorMap[thisValue]);
-					gameArray[row][col].resetTile();
+					gameArray[col][row].resetTile();
+					gameArray[col][row_2].value = thisValue;
+					gameArray[col][row_2].setCurrentPosition(col, row_2, colorMap[thisValue]);
 					success = true;
 				}
 
-				if (thisValue == memValue && streak == 2)
+				if (thisValue == memValue && streak == 2 && row_2 - 1 >= 0)
 				{
 					score += thisValue * 2;
-					for (unsigned int index = 0; index < 2; index++)
-					{
-						gameArray[row][col_2 - index].resetTile();
-						if (index == 2 - 1)
-						{
-							if(memoryMap[row][col_2 - index] == false )newAnimatedTile.dummyValue = thisValue;
-							gameArray[row][col_2 - index].value = thisValueCpy = thisValue * 2;
-							gameArray[row][col_2 - index].setCurrentPosition(row, col_2 - index, colorMap[thisValue * 2]);
-							col_2 = col_2 - index;
-						}
-					}
+					if (memoryMap[col][row_2 - 1] == false) newAnimatedTile.dummyValue = thisValue;
+					gameArray[col][row_2 - 1].value = thisValueCpy = thisValue * 2;
+					gameArray[col][row_2].resetTile();
+					gameArray[col][row_2 - 1].setCurrentPosition(col, row_2 - 1, colorMap[thisValue * 2]);
+					row_2--;
 				}
-				if (col_2 != col)
+				if (row_2 != row)
 				{
-					gameArray[row][col].isActive = gameArray[row][col_2].isActive = true;
-					newAnimatedTile.setCurrentPosition(row, col, colorMap[thisValue]);
-					newAnimatedTile.setDestinationPosition(row, col_2, colorMap[thisValue], colorMap[thisValueCpy]);
+					gameArray[col][row].isActive = gameArray[col][row_2].isActive = true;
+					newAnimatedTile.setCurrentPosition(col, row, colorMap[thisValue]);
+					newAnimatedTile.setDestinationPosition(col, row_2, colorMap[thisValue], colorMap[thisValueCpy]);
 					newAnimatedTile.value = thisValue;
 					animationQueue.push(newAnimatedTile);
 				}
@@ -451,14 +442,14 @@ bool gameBoard::moveUp()
 bool gameBoard::actuateBoard(int keycode)
 {
 	bool success = false;
-	unsigned int *newRandomTileDat;
+	sf::Vector3i newRandomTileDat;
 
 	switch (keycode)
 	{
 	case 73:
 		success = moveUp();
 		newRandomTileDat = returnRandomTile();
-		if (success && !setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2)))
+		if (success && !setRandomTile(newRandomTileDat))
 		{
 			std::cout << "Gameover?";
 		}
@@ -466,7 +457,7 @@ bool gameBoard::actuateBoard(int keycode)
 	case 74:
 		success = moveDown();
 		newRandomTileDat = returnRandomTile();
-		if (success && !setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2)))
+		if (success && !setRandomTile(newRandomTileDat))
 		{
 			std::cout << "Gameover?";
 		}
@@ -474,7 +465,7 @@ bool gameBoard::actuateBoard(int keycode)
 	case 71:
 		success = moveLeft();
 		newRandomTileDat = returnRandomTile();
-		if (success && !setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2)))
+		if (success && !setRandomTile(newRandomTileDat))
 		{
 			std::cout << "Gameover?";
 		}
@@ -482,7 +473,7 @@ bool gameBoard::actuateBoard(int keycode)
 	case 72:
 		success = moveRight();
 		newRandomTileDat = returnRandomTile();
-		if (success && !setRandomTile(*(newRandomTileDat), *(newRandomTileDat + 1), *(newRandomTileDat + 2)))
+		if (success && !setRandomTile(newRandomTileDat))
 		{
 			std::cout << "Gameover?";
 		}
