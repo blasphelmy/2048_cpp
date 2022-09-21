@@ -28,7 +28,7 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 
 	sf::RectangleShape gamePiece(sf::Vector2f(95.f, 95.f));
 	sf::Text number{std::to_string(gamePieceBase->value), font};
-	sf::Color numberColor((gamePieceBase->color.x), (gamePieceBase->color.y), (gamePieceBase->color.z));
+	sf::Color numberColor(static_cast<int>(gamePieceBase->color.x), static_cast<int>(gamePieceBase->color.y), static_cast<int>(gamePieceBase->color.z));
 	gamePiece.setFillColor(numberColor);
 	gamePiece.setPosition(gamePieceBase->getCurrentPos().x, gamePieceBase->getCurrentPos().y);
 
@@ -81,7 +81,7 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 			{
 				tileBG.setSize(sf::Vector2f(95.f, 95.f));
 			}
-			tileBG.setPosition(200 + row * 100, 200 + col * 100);
+			tileBG.setPosition(200 + static_cast<float>(row) * 100, 200 + static_cast<float>(col) * 100);
 			tileBG.setOutlineThickness(5.0);
 			tileBG.setOutlineColor(sf::Color(203, 188, 169, 255));
 			sf::Color numberColor(223, 208, 189, 255);
