@@ -11,7 +11,10 @@ add_executable(2048_cpp src/main.cpp
 src/gameBoard.cpp
 src/gameBoard.h
 src/tile.cpp
-src/tile.h)
+src/tile.h
+src/RoundedRectangleShape.cpp
+src/RoundedRectangleShape.hpp
+)
 target_link_libraries(2048_cpp PRIVATE sfml-graphics)
 target_compile_features(2048_cpp PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)

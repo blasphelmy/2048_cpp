@@ -11,7 +11,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "gameBoard.h"
-#include "crtdbg.h"
+#include "RoundedRectangleShape.hpp"
 
 const int fps = 120;
 const int oneSecond = 1000;
@@ -55,10 +55,17 @@ int main(int argc, char** argv) {
 	}
 	newGameBoard.font = font;
 
+	// sf::RoundedRectangleShape roundedRectangle(sf::Vector2f(100, 100), 10.f, 10);
+	// roundedRectangle.setSize(sf::Vector2f(100, 100));
+	// roundedRectangle.setCornersRadius(5);
+	// roundedRectangle.setOutlineThickness(0);
+	// roundedRectangle.setPosition(10, 20);
+	// roundedRectangle.setFillColor(sf::Color::Blue);
+
 	while (window.isOpen()) {
 		//std::cout << "Loop" << std::endl;
 		window.clear(sf::Color(211, 193, 172, 255));
-
+		// window.draw(roundedRectangle);
 		bool isActive = newGameBoard.renderGameBoard(&window);
 		mainControls(&window, isActive);
 		window.display();

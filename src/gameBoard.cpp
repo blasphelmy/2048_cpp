@@ -4,6 +4,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "RoundedRectangleShape.hpp"
 
 sf::Color gameBoard::getNumberColor(unsigned int value)
 {
@@ -26,7 +27,7 @@ void gameBoard::drawGamePiece(tile *gamePieceBase, sf::RenderWindow *window)
 		drawGamePiece(&dummyBase, &*window);
 	}
 
-	sf::RectangleShape gamePiece(sf::Vector2f(95.f, 95.f));
+	sf::RoundedRectangleShape gamePiece(sf::Vector2f(95.f, 95.f), 7.f, 7);
 	sf::Text number{std::to_string(gamePieceBase->value), font};
 	sf::Color numberColor(static_cast<int>(gamePieceBase->color.x), static_cast<int>(gamePieceBase->color.y), static_cast<int>(gamePieceBase->color.z));
 	gamePiece.setFillColor(numberColor);
@@ -68,17 +69,22 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 
 	window->draw(scoreElement);
 
+	sf::RoundedRectangleShape bg(sf::Vector2f(390.f, 390.f), 10.f, 10);
+	bg.setCornersRadius(5);
+	bg.setFillColor(sf::Color(203, 188, 169, 255));
+	bg.setPosition(200, 200);
+	window->draw(bg);
 	for (row = 0; row < 4; row++)
 	{
 		for (col = 0; col < 4; col++)
 		{
-			sf::RectangleShape tileBG(sf::Vector2f(100.f, 100.f));
-			if (row == 3) tileBG.setSize(sf::Vector2f(95.f, 100.f));
-			if (col == 3) tileBG.setSize(sf::Vector2f(100.f, 95.f));
-			if (row == 3 && col == 3)
-			{
-				tileBG.setSize(sf::Vector2f(95.f, 95.f));
-			}
+			sf::RoundedRectangleShape tileBG(sf::Vector2f(95.f, 95.f), 7.f, 7);
+			// if (row == 3) tileBG.setSize(sf::Vector2f(90.f, 95.f));
+			// if (col == 3) tileBG.setSize(sf::Vector2f(95.f, 90.f));
+			// if (row == 3 && col == 3)
+			// {
+			// 	tileBG.setSize(sf::Vector2f(90.f, 90.f));
+			// }
 			tileBG.setPosition(200 + static_cast<float>(row) * 100, 200 + static_cast<float>(col) * 100);
 			tileBG.setOutlineThickness(5.0);
 			tileBG.setOutlineColor(sf::Color(203, 188, 169, 255));
