@@ -14,6 +14,7 @@
 #include "crtdbg.h"
 
 const int fps = 120;
+const int oneSecond = 1000;
 
 gameBoard newGameBoard;
 sf::Font font;
@@ -53,9 +54,11 @@ int main(int argc, char** argv) {
 		std::cout << "Failed to load font" << std::endl;
 	}
 	newGameBoard.font = font;
+
 	while (window.isOpen()) {
 		//std::cout << "Loop" << std::endl;
 		window.clear(sf::Color(211, 193, 172, 255));
+
 		bool isActive = newGameBoard.renderGameBoard(&window);
 		mainControls(&window, isActive);
 		window.display();

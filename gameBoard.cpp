@@ -73,10 +73,8 @@ bool gameBoard::renderGameBoard(sf::RenderWindow *window)
 		for (col = 0; col < 4; col++)
 		{
 			sf::RectangleShape tileBG(sf::Vector2f(100.f, 100.f));
-			if (row == 3)
-				tileBG.setSize(sf::Vector2f(95.f, 100.f));
-			if (col == 3)
-				tileBG.setSize(sf::Vector2f(100.f, 95.f));
+			if (row == 3) tileBG.setSize(sf::Vector2f(95.f, 100.f));
+			if (col == 3) tileBG.setSize(sf::Vector2f(100.f, 95.f));
 			if (row == 3 && col == 3)
 			{
 				tileBG.setSize(sf::Vector2f(95.f, 95.f));
@@ -165,6 +163,10 @@ void gameBoard::initGameBoard()
 			gameArray[row][col].value = 0;
 		}
 	}
+	for (int i = 0; i < 4; i++) {
+		gameArray[0][i].value = 4;
+		gameArray[0][i].setCurrentPosition(0, i, colorMap[4]);
+	}
 	sf::Vector3i newRandomTileDat = returnRandomTile();
 	if (!setRandomTile(newRandomTileDat))
 	{
@@ -234,6 +236,7 @@ bool gameBoard::moveRight()
 					gameArray[col_2][row].resetTile();
 					gameArray[col_2 + 1][row].setCurrentPosition(col_2 + 1, row, colorMap[thisValue * 2]);
 					col_2++;
+					streak = 0;
 				}
 				if (col_2 != col)
 				{
@@ -296,6 +299,7 @@ bool gameBoard::moveLeft()
 					gameArray[col_2 - 1][row].value = thisValueCpy = thisValue * 2;
 					gameArray[col_2 - 1][row].setCurrentPosition(col_2 - 1, row, colorMap[thisValue * 2]);
 					col_2--;
+					streak = 0;
 				}
 				if (col_2 != col)
 				{
@@ -361,6 +365,7 @@ bool gameBoard::moveDown()
 					gameArray[col][row_2].resetTile();
 					gameArray[col][row_2 + 1].setCurrentPosition(col, row_2 + 1, colorMap[thisValue * 2]);
 					row_2++;
+					streak = 0;
 				}
 				if (row_2 != row)
 				{
@@ -425,6 +430,7 @@ bool gameBoard::moveUp()
 					gameArray[col][row_2].resetTile();
 					gameArray[col][row_2 - 1].setCurrentPosition(col, row_2 - 1, colorMap[thisValue * 2]);
 					row_2--;
+					streak = 0;
 				}
 				if (row_2 != row)
 				{
