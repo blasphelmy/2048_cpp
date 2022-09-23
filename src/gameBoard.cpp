@@ -163,10 +163,6 @@ void gameBoard::initGameBoard()
 			gameArray[row][col].value = 0;
 		}
 	}
-	for (int i = 0; i < 4; i++) {
-		gameArray[0][i].value = 4;
-		gameArray[0][i].setCurrentPosition(0, i, colorMap[4]);
-	}
 	sf::Vector3i newRandomTileDat = returnRandomTile();
 	if (!setRandomTile(newRandomTileDat))
 	{
